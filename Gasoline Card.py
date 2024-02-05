@@ -75,3 +75,4 @@ insert=st.button('حفظ')
 row=[area,user_input_letter,user_input_number,vendor,reason]
 if insert:
     worksheet.append_row(row)
+    st.write(' تم ادخال البيانات بنجاح')

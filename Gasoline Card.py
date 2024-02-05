@@ -1,10 +1,9 @@
-import datetime
+from datetime import datetime
 import streamlit as st
 import pandas as pd
 import gspread
 import numpy as np
 import pandas as pd
-import re
 from oauth2client.service_account import ServiceAccountCredentials
 credentials_json = {
         "type": "service_account",
@@ -39,40 +38,32 @@ vendor = st.selectbox(
    placeholder="اختار الشركة",
 )
 
-arabic_letters_regex = re.compile('^[\u0600-\u06FF\s]+$')
 
-# دالة للتحقق من صحة المدخلات
-def is_arabic_text(text):
-    return bool(arabic_letters_regex.match(text))
-
-# إضافة واجهة المستخدم باستخدام st.text_input
 user_input_letter = st.text_input('حروف المعدة')
 
 # التحقق من صحة المدخلات باستخدام الدالة المخصصة
-if is_arabic_text(user_input_letter):
-    st.success('المدخلات صحيحة!')
-else:
-    st.error('المدخلات يجب أن تحتوي على حروف عربية فقط.')
-    
-numbers_only_regex = re.compile('^\d+$')
 
-# دالة للتحقق من صحة المدخلات
-def is_numbers_only(text):
-    return bool(numbers_only_regex.match(text))
 
-# إضافة واجهة المستخدم باستخدام st.text_input
+
 user_input_number = st.text_input('ارقام المعدة')
 
-# التحقق من صحة المدخلات باستخدام الدالة المخصصة
-if is_numbers_only(user_input_number):
-    st.success('المدخلات صحيحة!')
-else:
-    st.error('المدخلات يجب أن تحتوي على أرقام فقط.')
+
 
 
 reason=st.text_area('ادخل السبب')
 insert=st.button('حفظ')
-row=[area,user_input_letter,user_input_number,vendor,reason]
+current_date = datetime.now()
+
+if 'user_input_values' not in st.session_state:
+    st.session_state.user_input_values = {
+        'user_input_letter': '',
+        'user_input_number': '',
+        'vendor': '',
+        'reason': ''
+    }
+formatted_date = current_date.strftime("%d-%m-%Y")
+row=[formatted_date,area,user_input_letter,user_input_number,vendor,reason]
 if insert:
     worksheet.append_row(row)
     st.write(' تم ادخال البيانات بنجاح')
+    
